@@ -16,7 +16,7 @@ void overlayImage(const cv::Mat &background, const cv::Mat &foreground,
 {
 	background.copyTo(output);
 
-
+	//ss
 	// start at the row indicated by location, or at row 0 if location.y is negative.
 	for(int y = std::max(location.y , 0); y < background.rows; ++y)
 	{
@@ -63,12 +63,6 @@ void overlayImage(const cv::Mat &background, const cv::Mat &foreground,
 
 int main( int argc, const char** argv )
 {
-// 	cv::Mat foreground = imread("C:\\Users\\JayGuo\\Desktop\\logo.png", -1);
-// 	cv::Mat background = imread("C:\\Users\\JayGuo\\Desktop\\meitu_00004.jpg");
-// 	cv::Mat result;
-// 
-// 	overlayImage(background, foreground, result, cv::Point(110,110)	//cv::imshow( "result", result );
-
 
 	cv::Mat image = cv::imread("C:\\Users\\guozh\\Desktop\\meitu_00001.jpg");
 	cv::Mat detectFaceImg;

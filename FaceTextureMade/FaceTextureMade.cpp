@@ -153,39 +153,57 @@ void FaceTextureMade::grabCutFace( cv::Mat& inImage,cv::Mat& outImage,int iterNu
 	cv::resize(mask,mask,cv::Size(200,170));
 	cv::Mat imageROI;
 	imageROI = test(cv::Rect(256 - inImage.cols / 2,128 - inImage.rows / 2 - 30 ,inImage.cols,inImage.rows));
-	cvtColor(inImage,inImage,CV_RGB2HLS);
 	
+	//////////////////////////////////////////////////////////////////////////
+	//modify color start
+	//////////////////////////////////////////////////////////////////////////
+	cv::Mat test1;
+	cvtColor(inImage, inImage,CV_BGR2HSV);
+	for (int i = 0; i < inImage.cols; i++)
+	{
+		for (int j = 0; j < inImage.rows; j++)
+		{
+			uchar& l = inImage.at<cv::Vec3b>(j, i)[0];
+			uchar& a = inImage.at<cv::Vec3b>(j, i)[1];
+			uchar& b = inImage.at<cv::Vec3b>(j, i)[2];
+			b += 20;
+			a -= 1;
+			//a += 5;
+			if (l>255)
+			{
+				l = 255;
+			}
+			if (l<0)
+			{
+				l = 0;
+			}
+// 			if (a > 150)
+// 			{
+// 				a = 150;
+// 			}
+			if (b > 255)
+			{
+				b = 255;
+			}
+
+
+		}
+	}
+
 	
-	
-	IplImage *grayImg = cvCreateImage(imageROI.size(),IPL_DEPTH_8U,1);
-	cv::Mat gray;
-	cvtColor(imageROI,gray,CV_RGB2GRAY);  
-	grayImg = &IplImage(gray); 
-	CvScalar scalar = cvAvg(grayImg); 
-	IplImage * out = cvCreateImage(imageROI.size(),IPL_DEPTH_8U,3);;
-	//cv::convertScaleAbs(inImage,out,0.4/scalar.val[0]);
-	IplImage* image = &IplImage(inImage);
+	cvtColor(inImage, inImage, CV_HSV2BGR);
+	cv::imwrite("C:\\Users\\guozh\\Desktop\\test.jpg", inImage);
+
 	
 
-	cvConvertScale(image,out,0.5);  
-	cv::Mat res = cv::Mat(out,0);
-// 	for (int i = 0; i < inImage.cols; i++)
-// 	{
-// 		for (int j = 0; j<inImage.rows; j++)
-// 		{
-// 			//if (inImage.at<cv::Vec3b>(j,i)[0] + inImage.at<cv::Vec3b>(j,i)[1] + inImage.at<cv::Vec3b>(j,i)[2] > 50 && inImage.at<cv::Vec3b>(j,i)[0] + inImage.at<cv::Vec3b>(j,i)[1] + inImage.at<cv::Vec3b>(j,i)[2] < 240 )
-// 			{
-// 				inImage.at<cv::Vec3b>(j,i)[1] = 1.6 ;
-// // 				inImage.at<cv::Vec3b>(j,i)[1] = (imageROI.at<cv::Vec3b>(j,i)[1]* 0.75 + inImage.at<cv::Vec3b>(j,i)[1]* 0.25) ;
-// // 				inImage.at<cv::Vec3b>(j,i)[2] = (imageROI.at<cv::Vec3b>(j,i)[2]* 0.75 + inImage.at<cv::Vec3b>(j,i)[2]* 0.25) ;
-// 			}
-// 			
-// 		}
-// 	}
-	cvtColor(inImage,inImage,CV_HLS2RGB);
+	
+
+	//////////////////////////////////////////////////////////////////////////
+	//modify color end
+	//////////////////////////////////////////////////////////////////////////
 	inImage.copyTo(imageROI,mask);
 	
-	cv::imwrite("C:\\Users\\guozh\\Desktop\\test.jpg",res);
+	
 	outImage = test;
 
 }
