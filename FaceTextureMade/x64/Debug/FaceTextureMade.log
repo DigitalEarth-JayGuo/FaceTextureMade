@@ -1,6 +1,9 @@
 ﻿  FaceTextureMade.cpp
-d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(134): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(135): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(148): warning C4129: 'g': unrecognized character escape sequence
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(136): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(149): warning C4129: 'g': unrecognized character escape sequence
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(218): warning C4244: '+=': conversion from 'float' to 'uchar', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(219): warning C4244: '+=': conversion from 'float' to 'uchar', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(220): warning C4244: '+=': conversion from 'float' to 'uchar', possible loss of data
   FaceTextureMade.vcxproj -> D:\MyProject\FaceTextureMade\x64\Debug\FaceTextureMade.exe
   FaceTextureMade.vcxproj -> D:\MyProject\FaceTextureMade\x64\Debug\FaceTextureMade.pdb (Full PDB)

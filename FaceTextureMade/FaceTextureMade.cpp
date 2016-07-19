@@ -1,7 +1,8 @@
+
 #include "FaceTextureMade.h"
 #include <vector>
 #include <iostream>
-
+#include <opencv2/contrib/contrib.hpp>
 
 using namespace std;
 using namespace cv;
@@ -157,53 +158,148 @@ void FaceTextureMade::grabCutFace( cv::Mat& inImage,cv::Mat& outImage,int iterNu
 	//////////////////////////////////////////////////////////////////////////
 	//modify color start
 	//////////////////////////////////////////////////////////////////////////
-	cv::Mat test1;
-	cvtColor(inImage, inImage,CV_BGR2HSV);
-	for (int i = 0; i < inImage.cols; i++)
-	{
-		for (int j = 0; j < inImage.rows; j++)
-		{
-			uchar& l = inImage.at<cv::Vec3b>(j, i)[0];
-			uchar& a = inImage.at<cv::Vec3b>(j, i)[1];
-			uchar& b = inImage.at<cv::Vec3b>(j, i)[2];
-			b += 20;
-			a -= 1;
-			//a += 5;
-			if (l>255)
-			{
-				l = 255;
-			}
-			if (l<0)
-			{
-				l = 0;
-			}
-// 			if (a > 150)
-// 			{
-// 				a = 150;
-// 			}
-			if (b > 255)
-			{
-				b = 255;
-			}
 
 
-		}
-	}
+	calculatePix(imageROI, CV_BGR2HSV);
+	calculatePix(inImage, CV_BGR2HSV);
 
-	
-	cvtColor(inImage, inImage, CV_HSV2BGR);
-	cv::imwrite("C:\\Users\\guozh\\Desktop\\test.jpg", inImage);
-
-	
-
-	
-
+	//changePix(inImage, CV_BGR2HSV, 10, -10, 30);
+	//removeErro(inImage);
 	//////////////////////////////////////////////////////////////////////////
 	//modify color end
 	//////////////////////////////////////////////////////////////////////////
+	
+	//cvtColor(inImage, inImage, CV_GRAY2BGR);
+	cv::Mat roi = imageROI;
 	inImage.copyTo(imageROI,mask);
+
+	//addWeighted(imageROI, 0.5, roi, 0.5, 0, roi);
 	
+// 	cvtColor(imageROI, imageROI, CV_BGR2GRAY);
+// 	cv::Mat contours;
+	//cv::Canny(imageROI, contours, 125, 350);
+	//cv::medianBlur(imageROI, imageROI, 5);
 	
+// 	CvAdaptiveSkinDetector skinDetector(1, CvAdaptiveSkinDetector::MORPHING_METHOD_NONE);
+// 	IplImage* image = &IplImage(inImage);
+// 	IplImage* mask1 = cvCreateImage(cvGetSize(image), IPL_DEPTH_8U, 1);
+// 	cvZero(mask1);
+// 	skinDetector.process(image, mask1);
+// 	cvSaveImage("C:\\Users\\guozh\\Desktop\\test.jpg", mask1);
+	cv::imwrite("C:\\Users\\guozh\\Desktop\\test.jpg", imageROI);
 	outImage = test;
 
+}
+
+void FaceTextureMade::changePix(cv::Mat& inImage, int type, float inB, float inG, float inR)
+{
+	int reType;
+	switch (type)
+	{
+	case CV_BGR2HSV:
+		reType = CV_HSV2BGR;
+		break;
+	case CV_BGR2Lab:
+		reType = CV_Lab2BGR;
+		break;
+	case CV_BGR2HLS:
+		reType = CV_HLS2BGR;
+		break;
+	default:
+		break;
+	}
+
+	cvtColor(inImage, inImage, type);
+
+	cv::Mat_<cv::Vec3b>::iterator it = inImage.begin < cv::Vec3b >();
+	cv::Mat_<cv::Vec3b>::iterator itEnd = inImage.end<cv::Vec3b>();
+	for (; it != itEnd; ++it)
+	{
+		(*it)[0] += inB;
+		(*it)[1] += inG;
+		(*it)[2] += inR;
+		//(*it)[0] += 15;
+	}
+
+	cvtColor(inImage, inImage, reType);
+	
+	
+}
+
+void FaceTextureMade::removeErro(cv::Mat& inImage)
+{
+	cv::Mat_<cv::Vec3b>::iterator it = inImage.begin < cv::Vec3b >();
+	cv::Mat_<cv::Vec3b>::iterator itEnd = inImage.end<cv::Vec3b>();
+	for (; it != itEnd; ++it)
+	{
+		(*it)[0] = (*it)[0] > 255 ? 255 : (*it)[0];
+		(*it)[1] = (*it)[1] > 255 ? 255 : (*it)[1];
+		(*it)[2] = (*it)[2] > 255 ? 255 : (*it)[2];
+		//(*it)[0] += 15;
+	}
+}
+
+void FaceTextureMade::changeBrightness(cv::Mat& inImage, float inValue)
+{
+// 	cv::Mat_<cv::Vec3b>::iterator it = inImage.begin < cv::Vec3b >();
+// 	cv::Mat_<cv::Vec3b>::iterator itEnd = inImage.end<cv::Vec3b>();
+// 	for (; it != itEnd; ++it)
+// 	{
+// 		countB += (*it)[0];
+// 		countG += (*it)[1];
+// 		countR += (*it)[2];
+// 		//(*it)[0] += 15;
+// 	}
+}
+
+void FaceTextureMade::changeSaturature(cv::Mat& inImage, float inValue)
+{
+
+}
+
+void FaceTextureMade::calculatePix(cv::Mat& inImage, int type)
+{
+	int reType;
+	switch (type)
+	{
+	case CV_BGR2HSV:
+		reType = CV_HSV2BGR;
+		break;
+	case CV_BGR2Lab:
+		reType = CV_Lab2BGR;
+		break;
+	case CV_BGR2HLS:
+		reType = CV_HLS2BGR;
+		break;
+	default:
+		break;
+	}
+
+	cvtColor(inImage, inImage, type);
+	float countB = 0;
+	float countG = 0;
+	float countR = 0;
+	cv::Mat_<cv::Vec3b>::iterator it = inImage.begin < cv::Vec3b >();
+	cv::Mat_<cv::Vec3b>::iterator itEnd = inImage.end<cv::Vec3b>();
+	for (; it != itEnd; ++it)
+	{
+		countB += (*it)[0];
+		countG += (*it)[1];
+		countR += (*it)[2];
+		//(*it)[0] += 15;
+	}
+
+
+	cvtColor(inImage, inImage, reType);
+
+	//analy
+	
+	int pixNum = inImage.rows * inImage.cols;
+	cout <<"B: "<< countB/pixNum  << endl;
+	cout << "G: " << countG/pixNum  << endl;
+	cout << "R: " << countR/pixNum  << endl;
+
+
+
+	
 }
