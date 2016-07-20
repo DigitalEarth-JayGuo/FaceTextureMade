@@ -1,9 +1,21 @@
 ﻿  FaceTextureMade.cpp
 d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(135): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(136): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(149): warning C4129: 'g': unrecognized character escape sequence
-d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(218): warning C4244: '+=': conversion from 'float' to 'uchar', possible loss of data
-d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(219): warning C4244: '+=': conversion from 'float' to 'uchar', possible loss of data
-d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(220): warning C4244: '+=': conversion from 'float' to 'uchar', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(152): warning C4129: 'g': unrecognized character escape sequence
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(247): warning C4244: '+=': conversion from 'float' to 'uchar', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(248): warning C4244: '+=': conversion from 'float' to 'uchar', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(249): warning C4244: '+=': conversion from 'float' to 'uchar', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(317): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(386): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(387): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(388): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(389): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(391): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(394): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(429): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(437): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(445): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(491): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\myproject\facetexturemade\facetexturemade\facetexturemade.cpp(498): warning C4244: '=': conversion from 'float' to 'unsigned char', possible loss of data
   FaceTextureMade.vcxproj -> D:\MyProject\FaceTextureMade\x64\Debug\FaceTextureMade.exe
   FaceTextureMade.vcxproj -> D:\MyProject\FaceTextureMade\x64\Debug\FaceTextureMade.pdb (Full PDB)

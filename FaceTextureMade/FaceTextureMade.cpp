@@ -146,22 +146,46 @@ void FaceTextureMade::grabCutFace( cv::Mat& inImage,cv::Mat& outImage,int iterNu
 
 	cv::GaussianBlur(mask,mask,Size(21,21),11);
 
+	//////////////////////////////////////////////////////////////////////////
+	//skin color begin
+	//////////////////////////////////////////////////////////////////////////
 	cv::Mat test = cv::imread("C:\\Users\\\guozh\\Desktop\\LRHLJ14069_miners_face_S001_diff_NQ.jpg");
 	
 	
+	cv::Mat skinColor;
+	skinColor.create(test.size(), CV_8UC3);
+	fillColor(skinColor, getROIColor(inImage));
+	Vec3f frontColor = getROIColor(inImage);
+
+	//back
+// 	cv::Mat backColor;
+// 	backColor.create(test.size(), CV_8UC3);
+//	fillColor(backColor,Vec3f(157,180,236));
+	Vec3f backColor = Vec3f(157, 180, 236);
+
+	bilateralBlur(inImage, inImage, 1, 1, 10);
+	//mixPixWithColor(test, inImage, backColor, frontColor);
+	//addWeighted(test,1, skinColor, 1.5, 0, test);
+	//mixPix(skinColor, test);
 	
+	//////////////////////////////////////////////////////////////////////////
+	//skin color end
+	//////////////////////////////////////////////////////////////////////////
+
 	cv::resize(inImage,inImage,cv::Size(200,170));
 	cv::resize(mask,mask,cv::Size(200,170));
+	
 	cv::Mat imageROI;
 	imageROI = test(cv::Rect(256 - inImage.cols / 2,128 - inImage.rows / 2 - 30 ,inImage.cols,inImage.rows));
+	
 	
 	//////////////////////////////////////////////////////////////////////////
 	//modify color start
 	//////////////////////////////////////////////////////////////////////////
 
 
-	calculatePix(imageROI, CV_BGR2HSV);
-	calculatePix(inImage, CV_BGR2HSV);
+// 	calculatePix(imageROI, CV_BGR2HSV);
+// 	calculatePix(inImage, CV_BGR2HSV);
 
 	//changePix(inImage, CV_BGR2HSV, 10, -10, 30);
 	//removeErro(inImage);
@@ -170,10 +194,15 @@ void FaceTextureMade::grabCutFace( cv::Mat& inImage,cv::Mat& outImage,int iterNu
 	//////////////////////////////////////////////////////////////////////////
 	
 	//cvtColor(inImage, inImage, CV_GRAY2BGR);
-	cv::Mat roi = imageROI;
+	cv::Mat backImg;
+	backImg.create(imageROI.size(), CV_8UC3);
+	imageROI.copyTo(backImg);
+	
 	inImage.copyTo(imageROI,mask);
-
-	//addWeighted(imageROI, 0.5, roi, 0.5, 0, roi);
+// 	cv::Mat outPut;
+// 	outPut.create(imageROI.size(), CV_8UC3);
+// 	mixPixWithPointLight(imageROI, backImg, outPut);
+// 	imwrite("C:\\Users\\guozh\\Desktop\\front.jpg", outPut);
 	
 // 	cvtColor(imageROI, imageROI, CV_BGR2GRAY);
 // 	cv::Mat contours;
@@ -186,7 +215,7 @@ void FaceTextureMade::grabCutFace( cv::Mat& inImage,cv::Mat& outImage,int iterNu
 // 	cvZero(mask1);
 // 	skinDetector.process(image, mask1);
 // 	cvSaveImage("C:\\Users\\guozh\\Desktop\\test.jpg", mask1);
-	cv::imwrite("C:\\Users\\guozh\\Desktop\\test.jpg", imageROI);
+	//cv::imwrite("C:\\Users\\guozh\\Desktop\\test.jpg", test);
 	outImage = test;
 
 }
@@ -255,6 +284,222 @@ void FaceTextureMade::changeBrightness(cv::Mat& inImage, float inValue)
 void FaceTextureMade::changeSaturature(cv::Mat& inImage, float inValue)
 {
 
+}
+
+void FaceTextureMade::fillColor(cv::Mat& inImage, Vec3f inValue)
+{
+	cv::Mat_<cv::Vec3b>::iterator it = inImage.begin < cv::Vec3b >();
+	cv::Mat_<cv::Vec3b>::iterator itEnd = inImage.end<cv::Vec3b>();
+	for (; it != itEnd; ++it)
+	{
+		*it = inValue;
+// 		(*it)[0];
+// 		countG += (*it)[1];
+// 		countR += (*it)[2];
+		//(*it)[0] += 15;
+	}
+}
+
+void FaceTextureMade::calculateAveragePix(cv::Mat& inImage, Vec3f& outValue)
+{
+	float countB = 0;
+	float countG = 0;
+	float countR = 0;
+	cv::Mat_<cv::Vec3b>::iterator it = inImage.begin < cv::Vec3b >();
+	cv::Mat_<cv::Vec3b>::iterator itEnd = inImage.end<cv::Vec3b>();
+	for (; it != itEnd; ++it)
+	{
+		countB += (*it)[0];
+		countG += (*it)[1];
+		countR += (*it)[2];
+		//(*it)[0] += 15;
+	}
+	float pixNum = inImage.rows * inImage.cols;
+	outValue[0] = countB / pixNum;
+	outValue[1] = countG / pixNum;
+	outValue[2] = countR / pixNum;
+}
+
+void FaceTextureMade::mixPix(cv::Mat& inSrc, cv::Mat& inOutDes, float inValue)
+{
+	cv::Mat_<cv::Vec3b>::iterator itSrc = inSrc.begin < cv::Vec3b >();
+	cv::Mat_<cv::Vec3b>::iterator itSrcEnd = inSrc.end<cv::Vec3b>();
+
+	cv::Mat_<cv::Vec3b>::iterator itDes = inOutDes.begin < cv::Vec3b >();
+	cv::Mat_<cv::Vec3b>::iterator itDesEnd = inOutDes.end<cv::Vec3b>();
+
+	for (; itSrc != itSrcEnd&& itDes!=itDesEnd; ++itSrc,++itDes)
+	{
+		//(*itDes) += (*itSrc) * inValue;
+		for (int i =0; i<3;i++)
+		{
+			
+			//(*itDes)[i] = ((*itSrc)[i] + (*itDes)[i]) / 2;
+			float a = (*itSrc)[i];
+			float b = (*itDes)[i];
+
+			if(a <= 0.5)
+
+			{
+
+				b = 1 - (1 - b) / (2 * a);
+
+			}
+
+			else
+
+			{
+
+				b = b / (2 * (1 - a));
+
+			}
+			
+		}
+		
+		
+	}
+}
+
+void FaceTextureMade::mixPixWithColor(cv::Mat& backImage, cv::Mat& frontImage, Vec3f& backColor, Vec3f& frontColor)
+{
+	cv::Mat_<cv::Vec3b>::iterator itBack = backImage.begin < cv::Vec3b >();
+	cv::Mat_<cv::Vec3b>::iterator itBackEnd = backImage.end<cv::Vec3b>();
+	cv::Mat_<cv::Vec3b>::iterator itFront = frontImage.begin < cv::Vec3b >();
+	cv::Mat_<cv::Vec3b>::iterator itFrontEnd = frontImage.end<cv::Vec3b>();
+	for (; itBack != itBackEnd; ++itBack)
+	{
+		(*itBack) = ((Vec3f)(*itBack) + frontColor) / 2;
+		
+	}
+
+	for (; itFront != itFrontEnd; ++itFront)
+	{
+		
+		(*itFront) = ((Vec3f)(*itFront) * 0.8 + backColor * 0.2) ;
+	}
+}
+
+cv::Vec3f FaceTextureMade::getROIColor(cv::Mat& inImage)
+{
+	cv::Mat colorROI;
+	Vec2f center;
+	center[0] = inImage.cols / 2;
+	center[1] = inImage.rows / 2;
+	float width = inImage.cols / 5;
+	float length = inImage.rows / 5;
+
+	colorROI = inImage(cv::Rect(center[0] - width, center[1] - length, width, length));
+
+	//draw rec
+	rectangle(inImage, cv::Rect(center[0] - width / 2, center[1] - length / 2, width, length), cv::Scalar(255, 0, 0), 3);
+
+	//front
+	Vec3f roiColor;
+	calculateAveragePix(colorROI, roiColor);
+	
+	return roiColor;
+}
+
+void FaceTextureMade::mixPixWithPointLight(cv::Mat& inSrc1, cv::Mat& inSrc2, cv::Mat& outPut)
+{
+	float a = 0;
+
+	float b = 0;
+
+ 	for (int index_row = 0; index_row < inSrc1.rows; index_row++)
+
+	{
+
+		for (int index_col = 0; index_col < inSrc1.cols; index_col++)
+
+		{
+
+			for (int index_c = 0; index_c < 3; index_c++)
+
+			{
+
+				a = inSrc1.at<Vec3b>(index_row, index_col)[index_c];
+
+				b = inSrc2.at<Vec3b>(index_row, index_col)[index_c];
+
+				if (b <= 2 * a - 1)
+
+				{
+
+					outPut.at<Vec3b>(index_row, index_col)[index_c] = 2 * a - 1;
+
+				}
+
+				else if (b <= 2 * a)
+
+				{
+
+					outPut.at<Vec3b>(index_row, index_col)[index_c] = b;
+
+				}
+
+				else
+
+				{
+
+					outPut.at<Vec3b>(index_row, index_col)[index_c] = 2 * a;
+
+				}
+
+			}
+
+		}
+
+	}
+}
+
+void FaceTextureMade::bilateralBlur(cv::Mat &input_img, cv::Mat &output_img, float sigmaS, float sigmaR, int length)
+{
+	// Create Gaussian/Bilateral filter --- mask ---       
+	int i, j, x, y;
+	int radius = (int)length / 2;//∞Îæ∂  
+	int m_width = input_img.rows;
+	int m_height = input_img.cols;
+	std::vector<float> mask(length*length);
+
+	//∂®“Â”Ú∫À  
+	for (i = 0; i < length; i++)
+	{
+		for (j = 0; j < length; j++)
+		{
+			mask[i*length + j] = exp(-(i*i + j*j) / (2 * sigmaS*sigmaS));
+		}
+	}
+	float sum = 0.0f, k = 0.0f;
+	for (x = 0; x < m_width; x++)
+	{
+		unsigned char *pin = input_img.ptr<unsigned char>(x);
+		unsigned char *pout = output_img.ptr<unsigned char>(x);
+		for (y = 0; y < m_height; y++)
+		{
+			int centerPix = y;
+			for (i = -radius; i <= radius; i++)
+			{
+				for (j = -radius; j <= radius; j++)
+				{
+					int m = x + i, n = y + j;
+					if (x + i > -1 && y + j > -1 && x + i < m_width && y + j < m_height)
+					{
+						unsigned char value = input_img.at<unsigned char>(m, n);
+						//spatial diff  
+						float euklidDiff = mask[(i + radius)*length + (j + radius)];
+						float intens = pin[centerPix] - value;//÷µ”Ú∫À  
+						float factor = (float)exp(-0.5 * intens / (2 * sigmaR*sigmaR)) * euklidDiff;
+						sum += factor * value;
+						k += factor;
+					}
+				}
+			}
+			pout[y] = sum / k;
+			sum = 0.0f;
+			k = 0.0f;
+		}
+	}
 }
 
 void FaceTextureMade::calculatePix(cv::Mat& inImage, int type)
